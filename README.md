@@ -6,7 +6,7 @@ To start fast:
 > Run in terminal:
 
 ```ps
-npm run start-development
+npm run serve-development
 ```
 
 > Set some breakpoints in `index.ts` for example.
