@@ -63,4 +63,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin()
   ],
+  experiments: {
+    topLevelAwait: true,
+  },
 }
