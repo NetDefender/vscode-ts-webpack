@@ -1,5 +1,25 @@
 {
+  "defaultSeverity": "error",
   "extends": [
     "tslint:recommended"
-  ]
+  ],
+  "rules": {
+    "semicolon": true,
+    "trailing-comma": false,
+    "no-console": {
+      "severity": "off"
+    },
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-pascal-case",
+        "allow-leading-underscore",
+        "allow-snake-case",
+        "allow-trailing-underscore",
+        "require-const-for-all-caps"
+      ]
+    },
+    "typedef": [true, "parameter", "variable-declaration", "arrow-parameter", "property-declaration", "member-variable-declaration"]
+  }
 }
