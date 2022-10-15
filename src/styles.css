@@ -1,3 +1,7 @@
 .cool {
-  background-color: white;
+  background-color: blue;
+}
+
+.notCool {
+  background-color: red;
 }
