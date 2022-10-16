@@ -7,7 +7,7 @@
     "target": "ES2022",
     "rootDir": "src",
     "experimentalDecorators": true,
-    // "moduleResolution": "node", // When not launching a browser. Here and in webpack.base.js
+    "moduleResolution": "node", // When not launching a browser. Here and in webpack.base.js
     "sourceMap": true,
     "lib": ["dom", "webworker", "ES2022", "scripthost"]
   },
