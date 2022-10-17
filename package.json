@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build-development": "webpack --config webpack.development.js",
-    "serve-development": "npm run build-development && webpack serve --config webpack.development.js",
+    "serve-development": "webpack serve --config webpack.development.js",
     "build-production": "webpack --config webpack.production.js"
   },
   "devDependencies": {
