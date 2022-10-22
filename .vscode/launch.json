@@ -40,7 +40,7 @@
   "compounds": [
     {
       "name": "Debug Internal",
-      "preLaunchTask": "serve-development",
+      "preLaunchTask": "start",
       "configurations": [
         "Launch Microsoft Edge in headless mode",
         "Open Edge DevTools"

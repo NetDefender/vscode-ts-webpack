@@ -3,8 +3,8 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "serve-development",
-      "label": "serve-development",
+      "script": "start",
+      "label": "start",
       "detail": "webpack",
       "isBackground": true,
       "problemMatcher": [
