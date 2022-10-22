@@ -1,5 +1,4 @@
 const { join } = require('path')
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -57,9 +56,19 @@ module.exports = {
     }]
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
-      title: "Webpack Starter",
+      title: "Host",
+      meta: {
+        "context" : "host"
+      }
+    }),
+    new HtmlWebPackPlugin({
+      title: "SideBar",
+      filename: "sideBar.html",
+      template: "./src/sideBar.html",
+      meta: {
+        "context" : "sideBar"
+      }
     }),
     new MiniCssExtractPlugin()
   ],
