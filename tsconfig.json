@@ -6,10 +6,12 @@
     "module": "ES2022",
     "target": "ES2022",
     "rootDir": "src",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node", // When not launching a browser. Here and in webpack.base.js
     "sourceMap": true,
-    "lib": ["dom", "webworker", "ES2022", "scripthost"]
+    "lib": ["dom", "webworker", "ES2022", "scripthost"],
+    "types": ["reflect-metadata"]
   },
   "include": ["src", "index.d.ts"],
 }
