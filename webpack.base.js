@@ -58,18 +58,20 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       title: "Host",
+      filename: "index.html",
+      template: "./src/index.html",
       meta: {
         "context" : "host"
       }
     }),
-    new HtmlWebPackPlugin({
-      title: "SideBar",
-      filename: "sideBar.html",
-      template: "./src/sideBar.html",
-      meta: {
-        "context" : "sideBar"
-      }
-    }),
+    // new HtmlWebPackPlugin({
+    //   title: "SideBar",
+    //   filename: "sideBar.html",
+    //   template: "./src/sideBar.html",
+    //   meta: {
+    //     "context" : "sideBar"
+    //   }
+    // }),
     new MiniCssExtractPlugin()
   ],
   experiments: {
