@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-let lastPosition = 200;
+let lastPosition = 300;
 $('#auto-open').on('click', () => showSideBar());
 
 let isCollapsed = false;
@@ -37,8 +37,8 @@ $('#resizeSizeBar').on('mousedown', function(e) {
 
 function drag(e: MouseEvent) {
   let pos = window.innerWidth - e.clientX;
-  if(pos < 200) {
-    pos = 200;
+  if(pos < 300) {
+    pos = 300;
     hideSidebar();
     return;
   }
