@@ -12,7 +12,7 @@
     .material-symbols-outlined {
       font-variation-settings:
         'FILL' 0,
-        'wght' 400,
+        'wght' 300,
         'GRAD' 0,
         'opsz' 48
     }
@@ -23,7 +23,7 @@
     }
 
     .content {
-      background-color: aliceblue;
+      background-color: rgb(218, 218, 218);
     }
 
     .sidebar {
@@ -38,6 +38,7 @@
       display: flex;
       transition: right 0.2s;
       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
     }
 
     .sidebar-toolbar-container {
@@ -47,8 +48,8 @@
     }
 
     .sidebar-toolbar-button {
-      background-color: white;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05);
+      background-color: rgb(255, 255, 255);
+      /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05); */
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       -khtml-user-select: none;
@@ -60,13 +61,13 @@
     }
 
     .sidebar-toolbar-button:hover {
-      /* transform: scale(1.1); */
+      /* transform: scale(0.5); */
     }
 
     .sidebar-toolbar-transparent {
       display: flex;
       flex-direction: row;
-      height: 100%;
+      /* height: 100%; */
       background-color: transparent;
     }
 
@@ -74,10 +75,10 @@
       float: right;
       flex: auto;
       background-color: white;
-      padding:10px
-      /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19); */
-      /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 3px 7px 0 rgba(0, 0, 0, 0.12); */
-      /* border:1px solid red; */
+      padding: 10px
+        /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19); */
+        /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 3px 7px 0 rgba(0, 0, 0, 0.12); */
+        /* border:1px solid red; */
 
     }
   </style>
@@ -152,7 +153,10 @@
   <div id="sidebar" class="sidebar">
     <div id="sidebarButtons" class="sidebar-toolbar-container">
       <span id="openCloseSidebar" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
-        open_in_new
+        chevron_right
+      </span>
+      <span id="showHighlights" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
+        flash_off
       </span>
       <span id="resizeSizeBar" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
         drag_indicator
@@ -162,12 +166,12 @@
     </div>
 
     <div id="sidebarContent" class="sidebar-content">
-        <h1>This is sidebar 1</h1>
-        <label for="user">User:</label>
-        <input type="text" id="user" />
-        <h2>This is sidebar 2</h2>
-        <h3>This is sidebar 3</h3>
-        <h3>This is sidebar 4</h3>
+      <h1>This is sidebar 1</h1>
+      <label for="user">User:</label>
+      <input type="text" id="user" />
+      <h2>This is sidebar 2</h2>
+      <h3>This is sidebar 3</h3>
+      <h3>This is sidebar 4 This is sidebar 4 This is sidebar 4</h3>
     </div>
   </div>
 </body>

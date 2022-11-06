@@ -4,9 +4,9 @@ let lastPosition = 300;
 $('#auto-open').on('click', () => showSideBar());
 
 let isCollapsed = false;
-
 const showSideBar = () => {
   isCollapsed = false;
+  $('#openCloseSidebar').text('keyboard_double_arrow_right');
   $('#sidebar').css({'right': '0px', 'width': `${lastPosition}px`});
   $('#user').trigger('focus');
   $('#resizeSizeBar').show();
@@ -14,9 +14,10 @@ const showSideBar = () => {
 const hideSidebar = () => {
   isCollapsed = true;
   moveSidebar(200, true);
-  $('#sidebar').css('right', '-180px');
+  $('#sidebar').css('right', '-177px');
   $('#resizeSizeBar').hide();
-  document.removeEventListener('mousemove', drag)
+  $('#openCloseSidebar').text('keyboard_double_arrow_left');
+  document.removeEventListener('mousemove', drag);
 }
 
 $('#openCloseSidebar').on('click', function() {
