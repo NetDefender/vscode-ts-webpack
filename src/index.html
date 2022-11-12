@@ -20,34 +20,14 @@
   <style>
     body {
       margin: 0px;
+      display: flex;
     }
 
     .content {
       background-color: rgb(218, 218, 218);
     }
 
-    .sidebar {
-      width: 300px;
-      background-color: transparent;
-      position: fixed !important;
-      z-index: 1;
-      overflow: hidden;
-      border-radius: 5px;
-      right: 0;
-      top: 0;
-      display: flex;
-      transition: right 0.2s;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05);
-      border-radius: 5px;
-    }
-
-    .sidebar-toolbar-container {
-      /* border:1px solid magenta; */
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-toolbar-button {
+    .transition {
       background-color: rgb(255, 255, 255);
       /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05); */
       -webkit-touch-callout: none;
@@ -60,119 +40,30 @@
       transition: all .5s ease-in-out;
     }
 
-    .sidebar-toolbar-button:hover {
-      /* transform: scale(0.5); */
+    input {
+      flex-direction: column;
     }
 
-    .sidebar-toolbar-transparent {
+    .control {
       display: flex;
-      flex-direction: row;
-      /* height: 100%; */
-      background-color: transparent;
+      flex-direction: column;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+      margin: 10px;
+      padding: 10px;
     }
 
-    .sidebar-content {
-      float: right;
-      flex: auto;
-      background-color: white;
-      padding: 10px
-        /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19); */
-        /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 3px 7px 0 rgba(0, 0, 0, 0.12); */
-        /* border:1px solid red; */
-
+    .control * {
+      flex-direction: column;
     }
+
   </style>
 </head>
 
 <body>
-  <!-- <div id="placeholder"></div> -->
-  <div id="content" class="content">
-    <button id="auto-open">Automagically open</button>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-    <h1>This is heading 1</h1>
-    <h2>This is heading 2</h2>
-    <h3>This is heading 3</h3>
-  </div>
-
-  <div id="sidebar" class="sidebar">
-    <div id="sidebarButtons" class="sidebar-toolbar-container">
-      <span id="openCloseSidebar" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
-        chevron_right
-      </span>
-      <span id="showHighlights" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
-        flash_off
-      </span>
-      <span id="resizeSizeBar" class="material-symbols-outlined sidebar-toolbar-button" tabindex="-1">
-        drag_indicator
-      </span>
-      <div id="empty" class="sidebar-toolbar-transparent">
-      </div>
-    </div>
-
-    <div id="sidebarContent" class="sidebar-content">
-      <h1>This is sidebar 1</h1>
-      <label for="user">User:</label>
-      <input type="text" id="user" />
-      <h2>This is sidebar 2</h2>
-      <h3>This is sidebar 3</h3>
-      <h3>This is sidebar 4 This is sidebar 4 This is sidebar 4</h3>
-    </div>
+  <div class="control">
+    <label for="texto">Texto</label>
+    <input id="texto" type="text">
   </div>
 </body>
 
