@@ -45,9 +45,8 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
 
   set Value(value: TValue | null) {
     const oldValue = this.modelPropertyGetter(this.model);
-    const isValid = this.validations?.map(validation => validation.Validate(oldValue, value))
-      .reduce((prev, curr) => prev || curr);
     this.#modelPropertySetter(this.model, value);
+    this.validations?.forEach(validation => validation.Validate(oldValue, value));
     this.#isBindingToElement = true;
     try {
       if (this.#element && !this.#suspendBinding) {
@@ -94,11 +93,10 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
   }
 
   public Dispose() {
-    if (this.#element) {
-      if (this.#elementEventHandlerBinded) {
-        this.#element.removeEventListener(this.event, this.#elementEventHandlerBinded);
-      }
+    if (!this.#element || !this.#elementEventHandlerBinded) {
+      return;
     }
+    this.#element.removeEventListener(this.event, this.#elementEventHandlerBinded);
   }
 }
 
@@ -112,7 +110,7 @@ class ValidationContext<TModel> {
     this.ValidationChanged(this.Errors());
   }
 
-  Errors() {
+  Errors(): string[] {
     return this.Validations.map(validation => validation.Error).filter(error => error && error.length > 0);
   }
 
@@ -140,18 +138,21 @@ class Validation<TModel, TValue> implements IValidation<TModel> {
   }
 
   public Validate (oldValue: unknown, newValue: unknown): boolean  {
-    const wasValid = this.Error != null && this.Error.length == 0;
-    this.Error = '';
-    this.Error = this.ValidationFunction(this.Context.Model, this.isTValue(oldValue) ? oldValue : null, this.isTValue(newValue) ? newValue : null);
-    const isValid = this.Error != null && this.Error.length == 0;
+    const wasValid = this.isErrorEmpty(this.Error);
+    this.Error = this.ValidationFunction(this.Context.Model, this.isValidValue(oldValue) ? oldValue : null, this.isValidValue(newValue) ? newValue : null);
+    const isValid = this.isErrorEmpty(this.Error);
     if(wasValid != isValid){
       this.Context.NotifyValidationChanged();
     }
     return isValid;
   }
 
-  private isTValue(value: unknown): value is TValue {
+  protected isValidValue(value: unknown): value is TValue {
     return !!(value as TValue);
+  }
+
+  private isErrorEmpty(value: string) {
+    return value != null && value.length == 0;
   }
 }
 
