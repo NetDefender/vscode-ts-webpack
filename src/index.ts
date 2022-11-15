@@ -1,10 +1,11 @@
-import $ from 'jquery'
-import { randInt } from 'three/src/math/MathUtils';
+//import $ from 'jquery'
+import { randFloat, randInt } from 'three/src/math/MathUtils';
 
 type ModelToElementActionConverter<TElement extends HTMLElement, TValue> = (value: TValue | null, element: TElement) => void;
 type ElementToModelActionConverter<TElement extends HTMLElement, TValue> = (element: TElement, e: Event) => TValue | null;
 type ModelPropertyGetter<TModel, TValue> = (model: TModel) => TValue | null;
 type ValidationFunction<TModel, TValue> = (model: TModel, oldValue: TValue | null, newValue: TValue | null) => string;
+type PropertyBindingUpdated<TValue> = (fromModel: boolean, oldValue: TValue | null, newValue: TValue | null) => void;
 type ValidationChanged = (errors: string[]) => void;
 
 class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
@@ -16,11 +17,11 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
   static #regexLambda = /\((?<parameter>.*)\)\s*=>\s*(?<body>.+)/i;
 
   constructor(private selector: TElement | string, private event: keyof HTMLElementEventMap
+    , private model: TModel
+    , private modelPropertyGetter : ModelPropertyGetter<TModel, TValue>
     , private elementToModelConverter: ElementToModelActionConverter<TElement, TValue>
     , private modelToElementConverter: ModelToElementActionConverter<TElement, TValue>
-    , private modelPropertyGetter : ModelPropertyGetter<TModel, TValue>
-    , private model: TModel
-    , private propertyBindingUpdated?: (fromModel: boolean, oldValue: TValue | null, newValue: TValue | null) => void
+    , private propertyBindingUpdated?: PropertyBindingUpdated<TValue>
     , private validations?: Validation<TModel, TValue>[]) {
     if (typeof this.selector === "string") {
       const element: TElement | null = document.querySelector(this.selector);
@@ -107,11 +108,12 @@ class ValidationContext<TModel> {
 
   ClearErrors() {
     this.Validations.forEach(validation => validation.Error = '');
-    this.ValidationChanged(this.Errors());
+    this.NotifyValidationChanged();
   }
 
   Errors(): string[] {
-    return this.Validations.map(validation => validation.Error).filter(error => error && error.length > 0);
+    return this.Validations.map(validation => validation.Error)
+      .filter(error => error && error.length > 0);
   }
 
   IsValid() {
@@ -156,21 +158,86 @@ class Validation<TModel, TValue> implements IValidation<TModel> {
   }
 }
 
+function isNullOrUndefined(value: unknown): value is null {
+  return value === undefined || value === null;
+}
+
+function isNullOrUndefinedOrWhiteSpace(value: unknown): value is null {
+  return value === undefined || value === null || value.toString().trim().length === 0;
+}
+
+function isNullOrNaNOrUndefined(value: unknown): value is null {
+  return value === undefined || value === null || (typeof value === 'number' && isNaN(value));
+}
+/*********************************** *********************************************************************************************************************************************/
+/*********************************** *********************************************************************************************************************************************/
+
+class NumberFormatter {
+  #formatter: Intl.NumberFormat;
+  #decimalSeparator: string;
+  #groupSeparator: string;
+  #regexGroup: RegExp;
+  #regexSimplified: RegExp;
+  constructor(public readonly Locale: string) {
+    this.#formatter = new Intl.NumberFormat(this.Locale, {useGrouping: true});
+    this.#decimalSeparator = this.#formatter.format(0.1).charAt(1);
+    this.#groupSeparator = this.#formatter.format(1000).charAt(1);
+    this.#regexGroup = new RegExp(`^(?<principal>[0-9]{1,3})(?<grupo>[${this.#groupSeparator}][0-9]{3})*(?<decimal>[${this.#decimalSeparator}]\\d+)*$`);
+    this.#regexSimplified = new RegExp(`^(?<principal>[0-9]+)(?<decimal>[${this.#decimalSeparator}]\\d+)*$`);
+  }
+
+  get DecimalSeparator () {
+    return this.#decimalSeparator;
+  }
+
+  Format(value: number | null): string {
+    if(isNullOrNaNOrUndefined(value)) {
+      return '';
+    }
+    return this.#formatter.format(value);
+  }
+
+  Parse(value: string) : number | null {
+    if(isNullOrUndefinedOrWhiteSpace(value)) {
+      return null;
+    }
+    if(!value.match(this.#regexSimplified) && !value.match(this.#regexGroup)) {
+      return null;
+    }
+    const parsedValue = parseFloat(value.replaceAll(this.#groupSeparator, '').replaceAll(this.#decimalSeparator, '.'));
+    return isNaN(parsedValue) ? null : parsedValue;
+  }
+}
+class NumericControlBinding<TModel> extends ControlBinding<HTMLInputElement, TModel, number> {
+  static NumberFormatter: NumberFormatter = new NumberFormatter('es-ES');
+  constructor(selector: HTMLInputElement | string, event: keyof HTMLElementEventMap
+    , model: TModel
+    , modelPropertyGetter : ModelPropertyGetter<TModel, number>
+    , propertyBindingUpdated?: PropertyBindingUpdated<number>
+    , validations?: Validation<TModel, number>[]){
+      super(selector, event, model, modelPropertyGetter, (element, e) => {
+        return NumericControlBinding.NumberFormatter.Parse(element.value);
+      }, (value, element) => {
+        if(isNullOrNaNOrUndefined(value)) {
+          element.value = '';
+        } else {
+          element.value = NumericControlBinding.NumberFormatter.Format(value);
+        }
+      }, propertyBindingUpdated, validations);
+  }
+}
+
+/*********************************** *********************************************************************************************************************************************/
+/*********************************** *********************************************************************************************************************************************/
+
 class Modelz {
-  constructor(public Id: number, public Price: number) {
+  constructor(public Id: number, public Price: number | null) {
   }
 }
 
 const model = new Modelz(1, 100);
-const textBinding = new ControlBinding<HTMLInputElement, Modelz, number>('#texto', 'keyup'
-  , (element, e) => parseFloat(element.value)
-  , (value, element) => element.value = value ? value.toString() : ''
-  , (m) => m.Price
-  , model
-  , (fromModel, oldValue, newValue) => console.log(fromModel, oldValue, newValue));
+const textBinding = new NumericControlBinding<Modelz>('#texto', 'input', model, (m) => m.Price);
 
-document.getElementById('inspect')?.addEventListener('click', e => {
-  textBinding.Value = randInt(1, 1000);
-  // const u: unknown = 'abc'
-  // console.log(<number>u);
+document.getElementById('inspect')!.addEventListener('click', e => {
+  textBinding.Value = randFloat(1000, 10000);
 });
