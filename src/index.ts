@@ -8,7 +8,12 @@ type ValidationFunction<TModel, TValue> = (model: TModel, oldValue: TValue | nul
 type PropertyBindingUpdated<TValue> = (fromModel: boolean, oldValue: TValue | null, newValue: TValue | null) => void;
 type ValidationChanged = (errors: string[]) => void;
 
-class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
+interface IControlBinding<TModel>
+{
+  Model: TModel;
+  get Name(): string;
+}
+class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IControlBinding<TModel> {
   #element: TElement;
   #suspendBinding: boolean = false;
   #isBindingToElement: boolean = false;
@@ -16,7 +21,8 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
   #modelPropertySetter: (model: TModel, value: TValue | null) => void;
   static #regexLambda = /\((?<parameter>.*)\)\s*=>\s*(?<body>.+)/i;
 
-  constructor(private selector: TElement | string, private event: keyof HTMLElementEventMap
+  constructor(private name: string
+    , private selector: TElement | string, private event: keyof HTMLElementEventMap
     , private model: TModel
     , private modelPropertyGetter : ModelPropertyGetter<TModel, TValue>
     , private elementToModelConverter: ElementToModelActionConverter<TElement, TValue>
@@ -78,6 +84,23 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> {
     return this.validations;
   }
 
+  get Model() {
+    return this.model;
+  }
+
+  set Model(value: TModel) {
+    if(this.model !== value) {
+      this.model = value;
+      this.validations?.forEach(validation => validation.Context.Model = this.model);
+      const newValue = this.modelPropertyGetter(this.model);
+      this.Value = newValue;
+    }
+  }
+
+  get Name() {
+    return this.name;
+  }
+
   private elementEventHandler(e: Event) {
     if (this.#suspendBinding || this.#isBindingToElement || !this.#element) {
       return;
@@ -131,6 +154,8 @@ interface IValidation<TModel>
   Validate(oldValue: unknown, newValue: unknown): boolean;
   Error: string;
 }
+
+
 
 class Validation<TModel, TValue> implements IValidation<TModel> {
   constructor(public Context: ValidationContext<TModel>
@@ -208,14 +233,16 @@ class NumberFormatter {
     return isNaN(parsedValue) ? null : parsedValue;
   }
 }
+
 class NumericControlBinding<TModel> extends ControlBinding<HTMLInputElement, TModel, number> {
   static NumberFormatter: NumberFormatter = new NumberFormatter('es-ES');
-  constructor(selector: HTMLInputElement | string, event: keyof HTMLElementEventMap
+  constructor(name: string
+    , selector: HTMLInputElement | string, event: keyof HTMLElementEventMap
     , model: TModel
     , modelPropertyGetter : ModelPropertyGetter<TModel, number>
     , propertyBindingUpdated?: PropertyBindingUpdated<number>
     , validations?: Validation<TModel, number>[]){
-      super(selector, event, model, modelPropertyGetter, (element, e) => {
+      super(name, selector, event, model, modelPropertyGetter, (element, e) => {
         return NumericControlBinding.NumberFormatter.Parse(element.value);
       }, (value, element) => {
         if(isNullOrNaNOrUndefined(value)) {
@@ -227,17 +254,61 @@ class NumericControlBinding<TModel> extends ControlBinding<HTMLInputElement, TMo
   }
 }
 
+class TextControlBinding<TModel> extends ControlBinding<HTMLInputElement, TModel, string> {
+  static NumberFormatter: NumberFormatter = new NumberFormatter('es-ES');
+  constructor(name: string
+    , selector: HTMLInputElement | string, event: keyof HTMLElementEventMap
+    , model: TModel
+    , modelPropertyGetter : ModelPropertyGetter<TModel, string>
+    , propertyBindingUpdated?: PropertyBindingUpdated<string>
+    , validations?: Validation<TModel, string>[]){
+      super(name, selector, event, model, modelPropertyGetter, (element, e) => {
+        return element.value;
+      }, (value, element) => {
+        if(isNullOrNaNOrUndefined(value)) {
+          element.value = '';
+        } else {
+          element.value = value;
+        }
+      }, propertyBindingUpdated, validations);
+  }
+}
+
+class BindingContext<TModel>
+{
+  #bindings: Map<string, IControlBinding<TModel>>;
+  constructor() {
+    this.#bindings = new Map<string, IControlBinding<TModel>>();
+  }
+
+  Bindings(name: string): IControlBinding<TModel> | null {
+    if(!this.#bindings.has(name)) {
+      return null;
+    }
+    return <IControlBinding<TModel>>this.#bindings.get(name);
+  }
+
+  AddBinding(binding: IControlBinding<TModel>) {
+    this.#bindings.set(binding.Name, binding);
+  }
+}
+
 /*********************************** *********************************************************************************************************************************************/
 /*********************************** *********************************************************************************************************************************************/
 
 class Modelz {
-  constructor(public Id: number, public Price: number | null) {
+  constructor(public Id: number, public Price: number | null, public Description: string | null) {
   }
 }
 
-const model = new Modelz(1, 100);
-const textBinding = new NumericControlBinding<Modelz>('#texto', 'input', model, (m) => m.Price);
+const model = new Modelz(1, 100, "Daniel");
+
+const bindingContext = new BindingContext<Modelz>();
+bindingContext.AddBinding(new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
+bindingContext.AddBinding(new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
 
 document.getElementById('inspect')!.addEventListener('click', e => {
-  textBinding.Value = randFloat(1000, 10000);
+  const newModel = new Modelz(2, randInt(1, 1000), 'Juan');
+  bindingContext.Bindings('Prize')!.Model = newModel;
+  bindingContext.Bindings('Dezcription')!.Model = newModel;
 });
