@@ -1,6 +1,3 @@
-//import $ from 'jquery'
-import { randFloat, randInt } from 'three/src/math/MathUtils';
-
 type ModelToElementActionConverter<TElement extends HTMLElement, TValue> = (value: TValue | null, element: TElement) => void;
 type ElementToModelActionConverter<TElement extends HTMLElement, TValue> = (element: TElement, e: Event) => TValue | null;
 type ModelPropertyGetter<TModel, TValue> = (model: TModel) => TValue | null;
@@ -12,6 +9,15 @@ interface IControlBinding<TModel>
 {
   Model: TModel;
   get Name(): string;
+  get Validations() : IValidation<TModel>[] | undefined;
+  get Element(): HTMLElement | null;
+  SuspendBinding: boolean;
+  Dispose(): void;
+}
+
+interface IControlBindingValue<TModel, TValue> extends IControlBinding<TModel>
+{
+  get Value() : TValue | null;
 }
 class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IControlBinding<TModel> {
   #element: TElement;
@@ -42,7 +48,9 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IC
     }
     this.#modelPropertySetter = this.createModelPropertySetter();;
     this.#elementEventHandlerBinded = this.elementEventHandler.bind(this);
-    this.modelToElementConverter(this.modelPropertyGetter(this.model) , this.#element);
+    if(this.model) {
+      this.modelToElementConverter(this.modelPropertyGetter(this.model) , this.#element);
+    }
     this.#element.addEventListener(this.event, this.#elementEventHandlerBinded);
   }
 
@@ -277,8 +285,19 @@ class TextControlBinding<TModel> extends ControlBinding<HTMLInputElement, TModel
 class BindingContext<TModel>
 {
   #bindings: Map<string, IControlBinding<TModel>>;
-  constructor() {
+  constructor(private model:TModel) {
     this.#bindings = new Map<string, IControlBinding<TModel>>();
+  }
+
+  get Model() {
+    return this.model;
+  }
+
+  set Model(value: TModel) {
+    if(value !== this.model) {
+      this.model = value;
+      this.#bindings.forEach(b => b.Model = value);
+    }
   }
 
   Bindings(name: string): IControlBinding<TModel> | null {
@@ -288,7 +307,15 @@ class BindingContext<TModel>
     return <IControlBinding<TModel>>this.#bindings.get(name);
   }
 
-  AddBinding(binding: IControlBinding<TModel>) {
+  BindingsValued<TValue>(name: string): IControlBindingValue<TModel, TValue> | null {
+    if(!this.#bindings.has(name)) {
+      return null;
+    }
+    return this.#bindings.get(name) as IControlBindingValue<TModel, TValue>;
+  }
+
+  AddBinding<TValue>(factory: (model: TModel) => IControlBindingValue<TModel, TValue>) {
+    const binding = factory(this.model);
     this.#bindings.set(binding.Name, binding);
   }
 }
@@ -296,19 +323,19 @@ class BindingContext<TModel>
 /*********************************** *********************************************************************************************************************************************/
 /*********************************** *********************************************************************************************************************************************/
 
-class Modelz {
-  constructor(public Id: number, public Price: number | null, public Description: string | null) {
-  }
-}
+// class Modelz {
+//   constructor(public Id: number, public Price: number | null, public Description: string | null) {
+//   }
+// }
 
-const model = new Modelz(1, 100, "Daniel");
+// const model = new Modelz(1, 100, "Daniel");
 
-const bindingContext = new BindingContext<Modelz>();
-bindingContext.AddBinding(new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
-bindingContext.AddBinding(new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
+// const bc = new BindingContext<Modelz>();
+// bc.AddBinding(new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
+// bc.AddBinding(new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
 
-document.getElementById('inspect')!.addEventListener('click', e => {
-  const newModel = new Modelz(2, randInt(1, 1000), 'Juan');
-  bindingContext.Bindings('Prize')!.Model = newModel;
-  bindingContext.Bindings('Dezcription')!.Model = newModel;
-});
+// document.getElementById('inspect')!.addEventListener('click', e => {
+//   const newModel = new Modelz(2, randInt(1, 1000), 'Juan');
+//   bc.Bindings('Prize')!.Model = newModel;
+//   bc.Bindings('Dezcription')!.Model = newModel;
+// });

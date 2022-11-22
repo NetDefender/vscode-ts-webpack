@@ -6,6 +6,8 @@ module.exports = merge(base, {
   mode: "production",
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin()],
+    minimizer: [new TerserPlugin({terserOptions: {
+      compress: true,
+    }})],
   }
 })
