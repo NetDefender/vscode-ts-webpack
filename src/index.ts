@@ -339,3 +339,48 @@ class BindingContext<TModel>
 //   bc.Bindings('Prize')!.Model = newModel;
 //   bc.Bindings('Dezcription')!.Model = newModel;
 // });
+
+
+type Getter<TObject, TValue> = (object: TObject) => TValue | null;
+type Setter<TObject, TValue> = (object: TObject, value: TValue) => void;
+
+
+function createSetter<TObject, TValue>(getter: Getter<TObject, TValue>): Setter<TObject, TValue> {
+  const path: PropertyKey[] = [];
+  const proxy: TObject = new Proxy({} as TObject & {}, {
+    get(target, property) {
+      path.push(property);
+      return proxy;
+    }
+  });
+  return (object: TObject, value: TValue) => {
+    if (path.length === 0) {
+      // we haven't recorded the path to the property yet.
+      getter(proxy);
+      if (path.length === 0) {
+        throw new Error('Could not record path to setter value');
+      }
+    }
+    let current: any = object;
+    for (let i = 0; i < path.length - 1; i++) {
+      current = current?.[path[i]];
+    }
+    if (current != null) {
+      current[path[path.length - 1]] = value;
+    }
+  }
+}
+
+
+// example
+
+
+const getter1: Getter<{a: {b: { c: number}}}, number> = (object) => object.a.b.c;
+const setter1 = createSetter(getter1);
+
+const input1 = {a: {b: { c: 123}}};
+const output1 = getter1(input1);
+
+setter1(input1, 456);
+
+console.log(input1);
