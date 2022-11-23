@@ -1,6 +1,7 @@
 type ModelToElementActionConverter<TElement extends HTMLElement, TValue> = (value: TValue | null, element: TElement) => void;
 type ElementToModelActionConverter<TElement extends HTMLElement, TValue> = (element: TElement, e: Event) => TValue | null;
 type ModelPropertyGetter<TModel, TValue> = (model: TModel) => TValue | null;
+type ModelPropertySetter<TObject, TValue> = (object: TObject, value: TValue | null) => void;
 type ValidationFunction<TModel, TValue> = (model: TModel, oldValue: TValue | null, newValue: TValue | null) => string;
 type PropertyBindingUpdated<TValue> = (fromModel: boolean, oldValue: TValue | null, newValue: TValue | null) => void;
 type ValidationChanged = (errors: string[]) => void;
@@ -19,13 +20,34 @@ interface IControlBindingValue<TModel, TValue> extends IControlBinding<TModel>
 {
   get Value() : TValue | null;
 }
+
+function CreateSetter<TModel, TValue>(getter: ModelPropertyGetter<TModel, TValue>): ModelPropertySetter<TModel, TValue> {
+  const path: PropertyKey[] = [];
+  const proxy: TModel = new Proxy({} as TModel & {}, {
+    get(_, property) {
+      path.push(property);
+      return proxy;
+    }
+  });
+  return (model: TModel, value: TValue | null) => {
+    if (path.length === 0) {
+      getter(proxy);
+    }
+    let current: any = model;
+    for (let i = 0; i < path.length - 1; i++) {
+      current = current?.[path[i]];
+    }
+    if (current != null) {
+      current[path[path.length - 1]] = value;
+    }
+  }
+}
 class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IControlBinding<TModel> {
   #element: TElement;
   #suspendBinding: boolean = false;
   #isBindingToElement: boolean = false;
   #elementEventHandlerBinded: null | ((e: Event) => void) = null;
-  #modelPropertySetter: (model: TModel, value: TValue | null) => void;
-  static #regexLambda = /\((?<parameter>.*)\)\s*=>\s*(?<body>.+)/i;
+  #modelPropertySetter: ModelPropertySetter<TModel, TValue>;
 
   constructor(private name: string
     , private selector: TElement | string, private event: keyof HTMLElementEventMap
@@ -46,7 +68,7 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IC
     else {
       this.#element = this.selector;
     }
-    this.#modelPropertySetter = this.createModelPropertySetter();;
+    this.#modelPropertySetter = CreateSetter(this.modelPropertyGetter);
     this.#elementEventHandlerBinded = this.elementEventHandler.bind(this);
     if(this.model) {
       this.modelToElementConverter(this.modelPropertyGetter(this.model) , this.#element);
@@ -117,11 +139,6 @@ class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IC
     const newValue = this.elementToModelConverter(this.#element, e);
     this.#modelPropertySetter(this.model, newValue);
     this.propertyBindingUpdated?.(false, oldValue, newValue);
-  }
-
-  private createModelPropertySetter() {
-    const match = this.modelPropertyGetter.toString().match(ControlBinding.#regexLambda);
-    return eval(`(${match?.groups?.parameter}, value) => ${match?.groups?.body}=value`);
   }
 
   public Dispose() {
@@ -323,16 +340,16 @@ class BindingContext<TModel>
 /*********************************** *********************************************************************************************************************************************/
 /*********************************** *********************************************************************************************************************************************/
 
-// class Modelz {
-//   constructor(public Id: number, public Price: number | null, public Description: string | null) {
-//   }
-// }
+class Modelz {
+  constructor(public Id: number, public Price: number | null, public Description: string | null) {
+  }
+}
 
-// const model = new Modelz(1, 100, "Daniel");
+const modelz = new Modelz(1, 100, "Daniel");
 
-// const bc = new BindingContext<Modelz>();
-// bc.AddBinding(new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
-// bc.AddBinding(new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
+const bc = new BindingContext<Modelz>(modelz);
+bc.AddBinding(model => new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
+bc.AddBinding(model => new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
 
 // document.getElementById('inspect')!.addEventListener('click', e => {
 //   const newModel = new Modelz(2, randInt(1, 1000), 'Juan');
@@ -341,46 +358,6 @@ class BindingContext<TModel>
 // });
 
 
-type Getter<TObject, TValue> = (object: TObject) => TValue | null;
-type Setter<TObject, TValue> = (object: TObject, value: TValue) => void;
-
-
-function createSetter<TObject, TValue>(getter: Getter<TObject, TValue>): Setter<TObject, TValue> {
-  const path: PropertyKey[] = [];
-  const proxy: TObject = new Proxy({} as TObject & {}, {
-    get(target, property) {
-      path.push(property);
-      return proxy;
-    }
-  });
-  return (object: TObject, value: TValue) => {
-    if (path.length === 0) {
-      // we haven't recorded the path to the property yet.
-      getter(proxy);
-      if (path.length === 0) {
-        throw new Error('Could not record path to setter value');
-      }
-    }
-    let current: any = object;
-    for (let i = 0; i < path.length - 1; i++) {
-      current = current?.[path[i]];
-    }
-    if (current != null) {
-      current[path[path.length - 1]] = value;
-    }
-  }
-}
 
 
 // example
-
-
-const getter1: Getter<{a: {b: { c: number}}}, number> = (object) => object.a.b.c;
-const setter1 = createSetter(getter1);
-
-const input1 = {a: {b: { c: 123}}};
-const output1 = getter1(input1);
-
-setter1(input1, 456);
-
-console.log(input1);
