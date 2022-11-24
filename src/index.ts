@@ -29,18 +29,20 @@ function CreateSetter<TModel, TValue>(getter: ModelPropertyGetter<TModel, TValue
       return proxy;
     }
   });
-  return (model: TModel, value: TValue | null) => {
-    if (path.length === 0) {
-      getter(proxy);
+  //Generate path for later save parsing
+  getter(proxy);
+  let lastPath = path.pop()!.toString();
+  const previousPath = path.map(e => e.toString()).join('?.');
+  let callChainText = 'model' + (previousPath ? `?.${previousPath}` : '');
+  let getterFactoryText = `return (model, value) => {
+    let v$ = ${callChainText};
+    if(v$ != null) {
+      v$.${lastPath}=value;
     }
-    let current: any = model;
-    for (let i = 0; i < path.length - 1; i++) {
-      current = current?.[path[i]];
-    }
-    if (current != null) {
-      current[path[path.length - 1]] = value;
-    }
-  }
+  }`;
+
+  console.log(getterFactoryText);
+  return new Function(getterFactoryText)() as ModelPropertySetter<TModel, TValue>;
 }
 class ControlBinding<TElement extends HTMLElement, TModel, TValue> implements IControlBinding<TModel> {
   #element: TElement;
@@ -341,14 +343,14 @@ class BindingContext<TModel>
 /*********************************** *********************************************************************************************************************************************/
 
 class Modelz {
-  constructor(public Id: number, public Price: number | null, public Description: string | null) {
+  constructor(public Id: number, public Price: number | null, public Description: string | null, public Child?: Modelz | null) {
   }
 }
 
-const modelz = new Modelz(1, 100, "Daniel");
+const modelz = new Modelz(1, 100, "Daniel", {Id: 2, Price: 200, Description: "Peter"});
 
 const bc = new BindingContext<Modelz>(modelz);
-bc.AddBinding(model => new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Price));
+bc.AddBinding(model => new NumericControlBinding<Modelz>('Prize', '#number', 'input', model, (m) => m.Child!.Price));
 bc.AddBinding(model => new TextControlBinding<Modelz>('Dezcription', '#text', 'input', model, (m) => m.Description));
 
 // document.getElementById('inspect')!.addEventListener('click', e => {
