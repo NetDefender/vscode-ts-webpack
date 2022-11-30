@@ -9,6 +9,8 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
     .material-symbols-outlined {
       font-variation-settings:
         'FILL' 0,
@@ -19,54 +21,176 @@
   </style>
   <style>
     body {
+      font-family: 'Roboto';
       margin: 0px;
+      padding: 0px;
       display: flex;
+      flex-direction: row;
+      overflow-y: hidden;
     }
 
-    .content {
-      background-color: rgb(218, 218, 218);
-    }
-
-    .transition {
-      background-color: rgb(255, 255, 255);
-      /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05); */
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      cursor: grab;
-      transition: all .5s ease-in-out;
-    }
-
-    input {
-      flex-direction: column;
-    }
-
-    .control {
+    .container {
+      background-color: rgba(218, 218, 218, 0.568);
+      border-style: solid;
+      border-width: 1px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 7px 0 rgba(0, 0, 0, 0.05);
-      border-radius: 5px;
-      margin: 10px;
-      padding: 10px;
+      height: 100vh;
+      width: 75vw;
+      overflow-y: auto;
     }
 
-    .control * {
+    .container-top {
+      background-color: rgba(218, 218, 218, 0.568);
+      border-style: solid;
+      border-width: 1px;
+      display: flex;
       flex-direction: column;
+      height: 50vh;
+      width: 75vw;
+      overflow-y: auto;
     }
 
+    .container-bottom {
+      background-color: rgba(218, 218, 218, 0.568);
+      border-style: solid;
+      border-width: 1px;
+      display: flex;
+      flex-direction: column;
+      height: 50vh;
+      width: 75vw;
+      overflow-y: auto;
+    }
+
+    .side {
+      background-color: rgba(218, 218, 218, 0.568);
+      border-style: solid;
+      border-width: 1px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 25vw;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-left: 5%;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-bottom: 0px;
+    }
+
+    p {
+      margin-left: 5%;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+
+    .title-container {
+      padding-left: 10px;
+    }
+
+    .title-selected {
+      font-weight: bold;
+    }
+
+    .log-message {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .log-message:hover {
+      background-color: rgba(218, 218, 218, 0.568);
+    }
   </style>
 </head>
 
 <body>
-  <div class="control">
-    <label for="number">Número</label>
-    <input id="number" type="text">
-    <label for="text">Texto</label>
-    <input id="text" type="text">
-    <button id="inspect">Inspect</button>
+  <div class="container">
+
+    <div class="container-top">
+      <h1>Título 1</h1>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <p>AAAADoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <h1>Título 2</h1>
+      <h2>Subtitulo 2.1</h2>
+      <p>BBBBDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <h3>Subtitulo 2.1.1</h3>
+      <p>BBBBDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <h2>Subtitulo 2.2</h2>
+      <p>CCCCCDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+
+      <h1>Título 3</h1>
+      <h2>Subtitulo 3.1</h2>
+      <p>DDDDDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <h2>Subtitulo 3.2</h2>
+      <p>EEEEDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+      <h3>Subtitulo 3.2.1</h3>
+      <p>FFFFFDoña Uzeada de Ribera Maldonado de Bracamonte y Anaya era baja, rechoncha, abigotada. Ya no existia razon
+        para llamar talle al suyo. Sus colores vivos, sanos, podian mas que el albayalde y el soliman del afeite, con
+        que se blanqueaba por simular melancolias. Gastaba dos parches oscuros, adheridos a las sienes y que fingian
+        medicamentos</p>
+
+    </div>
+
+    <div class="container-bottom" id="log">
+
+    </div>
+  </div>
+
+  <div class="side">
+    <ul id="titles" class="title-container">
+
+    </ul>
   </div>
 </body>
 
