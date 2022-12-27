@@ -5,9 +5,8 @@ self.setInterval(() => {
 
   const message = {
     id: id,
-    message: 'Message sent at ' + Date.now()
+    message: "Message sent at " + Date.now(),
   };
 
   postMessage(message);
-
 }, 2000);

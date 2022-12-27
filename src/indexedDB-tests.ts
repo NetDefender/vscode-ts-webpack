@@ -45,12 +45,12 @@ const newProductId = await productsDatabase.put('products', {
 
 const transaction = productsDatabase.transaction('cache', 'readwrite');
 const keyExisting1 = await transaction.store.get('min-timeout')
-if(!keyExisting1) {
+if (!keyExisting1) {
   const keyAdded1 = await transaction.store.add(500, 'min-timeout');
 }
 
 const keyExisting2 = await transaction.store.get('min-timeout')
-if(!keyExisting2) {
+if (!keyExisting2) {
   const keyAdded2 = await transaction.store.add(600, 'max-timeout');
 }
 transaction.commit();

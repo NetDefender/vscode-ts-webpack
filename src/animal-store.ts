@@ -222,5 +222,5 @@ export const Animals = [
   "Worm",
   "Wren",
   "Yak",
-  "Zebra"
-]
+  "Zebra",
+];

@@ -1,14 +1,16 @@
-type ClassConstructor<T> = new(...args: any[]) => T;
+type ClassConstructor<T> = new (...args: any[]) => T;
 
-export function withEZDebug<C extends ClassConstructor<{getDebugValue(): object}>>(constructorFunction: C) {
+export function withEZDebug<
+  C extends ClassConstructor<{ getDebugValue(): object }>
+>(constructorFunction: C) {
   return class extends constructorFunction {
     constructor(...args: any[]) {
-        super(...args);
+      super(...args);
     }
 
     debug(): string {
       let name: string = constructorFunction.constructor.name;
       return name;
     }
-  }
+  };
 }

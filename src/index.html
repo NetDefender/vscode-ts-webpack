@@ -6,141 +6,150 @@
   <title>Host</title>
   <meta name="context" content="host">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-    .material-symbols-outlined {
+    .material-symbols-rounded {
       font-variation-settings:
         'FILL' 0,
-        'wght' 300,
+        'wght' 400,
         'GRAD' 0,
         'opsz' 48
     }
-  </style>
-  <style>
+
     body {
       font-family: 'Roboto';
       margin: 0px;
       padding: 0px;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       flex-wrap: nowrap;
       overflow-y: hidden;
       overflow-x: hidden;
     }
 
-    .container {
-      background-color: rgba(218, 218, 218, 0.568);
-      border-style: solid;
-      border-width: 1px;
+    .top-bar {
+      background-color: white;
       display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 75vw;
-      overflow-y: auto;
-
-    }
-
-    .container-top {
-      background-color: rgba(218, 218, 218, 0.568);
-      border-style: solid;
-      border-width: 1px;
-      display: flex;
-      flex-direction: column;
-      justify-items: center;
-      height: 50vh;
-      width: 75vw;
-      overflow-y: auto;
-      overflow-x:hidden;
-    }
-
-    .container-bottom {
-      background-color: rgba(218, 218, 218, 0.568);
-      border-style: solid;
-      border-width: 1px;
-      display: flex;
-      flex-direction: column;
-      height: 50vh;
-      width: 75vw;
-      overflow-y: auto;
-    }
-
-    .side {
-      background-color: rgba(218, 218, 218, 0.568);
-      border-style: solid;
-      border-width: 1px;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 25vw;
-      overflow-x: hidden;
-      overflow-y: hidden;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin-left: 5%;
-      margin-bottom: 0px;
-    }
-
-    p {
-      margin-left: 5%;
-    }
-
-    ul {
-      list-style-type: none;
-      margin: 5px;
-    }
-
-    li {
-      margin: 10px;
-    }
-
-    .title-container {
-      padding-left: 10px;
-    }
-
-    .progress-bar {
-      height: 80%;
-      width: 0%;
-      display:flex;
-      justify-content: center;
-      background-color: yellow;
-      border: 1px black solid;
-      overflow-x:hidden;
+      flex-direction: row;
       align-items: center;
+      height: 5vh;
+      overflow-y: auto;
+      position: relative;
+      margin: auto;
+      overflow: visible;
+      border-bottom: 1px solid black;
     }
 
-    .action-button {
-      height: 20%;
-      margin: 25px;
+    .content {
+      height: 100vh;
+      background-color: aliceblue;
+    }
+
+    .bar-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .bar-section-title {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    .bar-section-dropdown {
+      position: absolute;
+      display: none;
+      box-shadow: 5px 5px 2px #aaaaaa82;
+      border: 2px black solid;
+      background-color: white;
+      border-radius: 5px;
+    }
+
+    .bar-section-dropdown a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-decoration: none;
+      padding: 10px 15px 10px 10px;
+      color: black;
+    }
+
+    .bar-section-dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .bar-section:hover .bar-section-dropdown {
+      display: block;
+    }
+
+    .menu-item-text {
+      padding-left: 5px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="top-bar">
+    <div class="bar-section">
+      <div class="bar-section-title">Home</div>
 
-    <div class="container-top">
-      <div class="progress-bar"></div>
-      <button class="action-button">Enqueue</button>
+      <div class="bar-section-dropdown">
+        <a href="#"><span class="material-symbols-rounded">settings
+          </span><span class="menu-item-text">Configuration</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            group
+          </span><span class="menu-item-text">Users</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            help
+          </span><span class="menu-item-text">Help</span></a>
+      </div>
     </div>
 
-    <div class="container-bottom" id="log">
+    <div class="bar-section">
+
+      <div class="bar-section-title">Home</div>
+
+      <div class="bar-section-dropdown">
+        <a href="#"><span class="material-symbols-rounded">settings
+          </span><span class="menu-item-text">Configuration</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            group
+          </span><span class="menu-item-text">Users</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            help
+          </span><span class="menu-item-text">Help</span></a>
+      </div>
+
+    </div>
+
+    <div class="bar-section">
+      <div class="bar-section-title">Home</div>
+
+      <div class="bar-section-dropdown">
+        <a href="#"><span class="material-symbols-rounded">settings
+          </span><span class="menu-item-text">Configuration</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            group
+          </span><span class="menu-item-text">Users</span></a>
+        <a href="#"><span class="material-symbols-rounded">
+            help
+          </span><span class="menu-item-text">Help</span></a>
+      </div>
 
     </div>
   </div>
 
-  <div class="side">
-    <ul id="titles" class="title-container">
+  <div class="content">
 
-    </ul>
   </div>
 </body>
 
